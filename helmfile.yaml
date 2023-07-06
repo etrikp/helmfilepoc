@@ -1,0 +1,32 @@
+repositories:
+- name: netapp
+  url: https://netapp.github.io/trident-helm-chart
+
+releases:
+- name: netapp-trident
+  chart: netapp/trident-operator
+  version: 23.04.0  # Replace with the desired version
+  namespace: trident
+  createNamespace: true
+  # strategicMergePatches:
+  #   - apiVersion:  apps/v1
+  #     kind: Deployment
+  #     metadata:
+  #       name: trident-operator
+  #       namespace: trident
+  #     spec:
+  #       replicas: 2
+  # transformers:
+  #   - path: transformer.yaml
+  # deleteReleases: false
+  jsonPatches:
+    - target:
+        version: apps/v1
+        kind: Deployment
+        name: trident-operator
+      patch:
+        - op: replace
+          path: "/spec/template/spec/containers/0/image"
+          value: "registry.example.com/myimage"
+
+
